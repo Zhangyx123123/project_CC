@@ -1,0 +1,248 @@
+<html><!-- head --><head>
+<title>Mobile App</title>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all"><!-- bootstrap-CSS -->
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css" media="all"><!-- Fontawesome-CSS -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+<!-- Custom Theme files -->
+<link href="css/menu.css" rel="stylesheet" type="text/css" media="all"> <!-- menu style -->
+<!--theme-style-->
+<link href="css/style1.css" rel="stylesheet" type="text/css" media="all">
+<!--//theme-style-->
+ <link rel="stylesheet" type="text/css" href="css/easy-responsive-tabs.css ">
+<!--meta data-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="Match Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apigClient.js"></script>
+<!-- nav smooth scroll -->
+<!--//meta data-->
+<script>window.onload = function(){
+    var goals;
+    var values;
+    var apigClient = apigClientFactory.newClient();
+    var body = {
+                "messages": [
+                {
+                    "type": "get",
+                    "unstructured": {
+                    "id": "string",
+                    "email":sessionStorage.getItem("email")
+                    }
+                    }
+                ]
+            };
+    apigClient.profilePost(null, body)
+        .then(function(result){
+            var res = result["data"]["Item"];
+            if(res == "None") {console.log(123123)}
+            else{
+            let status = res['goals']["L"][0]["M"];
+            i = 1;
+            for(x in status){
+                if(status[x]["S"]!="null"){
+                    let email = status[x]["S"];
+                    var body = {
+                            "messages": [
+                            {
+                                "type": "get",
+                                "unstructured": {
+                                "id": "string",
+                                "email":email
+                                }
+                            }
+                        ]
+                    };
+                    apigClient.profilePost(null, body)
+                        .then(function(result){
+                            let res = result["data"]["Item"];
+
+                            let pic = document.getElementById("flexiselDemo3");
+                            var d1 = document.createElement("div");
+                            d1.className = "col-md-3 biseller-column matches";
+                            var a1 = document.createElement("a");
+                            a1.className = "matches"
+                            a1.name = res["email"]["S"]
+                            var d2 = document.createElement("div");
+                            d2.className = "profile-image";
+                            var img = document.createElement("img");
+                            img.src=res["img"]
+                            img.className="img-responsive";
+                            img.alt="profile image";
+                            var d3 = document.createElement("div");
+                            d3.className = "agile-overlay";
+                            var h4 = document.createElement("h4")
+                            h4.innerHTML = "email: " + res["email"]["S"];
+                            h4.id = "ur_email" + i
+                            var ul = document.createElement("ul")
+                            var span = document.createElement('span')
+                            span.innerHTML = "goal"
+                            var li = document.createElement("li")
+                            li.className = "nbs-flexisel-item"
+                            li.appendChild(span)
+                            li.append(": " + x)
+                            ul.appendChild(li)
+                            for(n in res){
+                                if(n=="gender" || n=="country" || n=="age") {
+                                    var span = document.createElement('span')
+                                    span.innerHTML = n
+                                    var li = document.createElement("li")
+                                    li.className = "nbs-flexisel-item"
+
+                                    li.appendChild(span)
+                                    li.append(": " + res[n]["S"])
+                                    ul.appendChild(li)
+                                }
+                                else if (n=="schedule"){
+                                    console.log(res[n]["L"].length)
+                                    let ls = res[n]["L"];
+                                    var span = document.createElement('span')
+                                    span.innerHTML = n
+                                    var li = document.createElement("li")
+                                    li.className = "nbs-flexisel-item"
+                                    li.appendChild(span)
+                                    li.append(": " + res[n]["L"][0]["S"])
+                                    ul.appendChild(li)
+                                    // for (j =0;j<= ls.length;j++){
+                                    //     var span = document.createElement('span')
+                                    //     span.innerHTML = n
+                                    //     var li = document.createElement("li")
+                                    //     li.className = "nbs-flexisel-item"
+                                    //     li.appendChild(span)
+                                    //     li.append(": " + ls[j]["S"])
+                                    //     ul.appendChild(li)
+                                    // }
+                                }
+                                d3.appendChild(h4);
+                                d3.appendChild(ul)
+                                d2.appendChild(img);
+                                d2.appendChild(d3);
+                                a1.appendChild(d2);
+                                d1.appendChild(a1);
+                                pic.appendChild(d1);
+                            }
+                        }).catch( function(result){
+
+                    });
+                }
+                i++;
+            }
+            }
+        }).catch( function(result){});
+
+        }
+</script>
+
+<script>
+    $(document).on("click","a.matches",function(){
+        console.log("nima")
+        let host = sessionStorage.getItem("email")
+        let partner = $(this).attr("name")
+        let img = $(".img-responsive").attr("src")
+        sessionStorage.setItem("partner_img", img)
+        sessionStorage.setItem("partner",partner)
+        console.log(partner)
+        window.location.href= "chat.html";
+    });
+</script>
+<!-- nav smooth scroll -->
+<script>
+$(document).ready(function(){
+    $(".dropdown").hover(
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+            $(this).toggleClass('open');
+        },
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+            $(this).toggleClass('open');
+        }
+    );
+});
+</script>
+</head>
+<body>
+	<!-- inner banner -->
+	<div class="w3layouts-inner-banner">
+		<div class="container">
+		<div class="logo">
+			<h1></h1>
+		</div>
+		</div>
+	</div>
+	<!-- //inner banner -->
+	<div class="w3layouts_featured-profiles">
+    <div class="container">
+    <!-- slider -->
+    <div class="agile_featured-profiles">
+      <h2>My Studymates</h2>
+          <ul id="flexiselDemo3">
+              <!-- <div class="col-md-3 biseller-column">
+                <a href="groom_profile.html">
+                  <div class="profile-image">
+                    <img src="images/p1.jpg" class="img-responsive" alt="profile image">
+                    <div class="agile-overlay">
+                    <h4>Profile ID: 458645</h4>
+                    </div >
+                  </div>featured
+                </a>
+              </div> -->
+          </ul>
+      </div>
+  </div>
+
+
+
+<!-- //footer -->
+<!-- menu js aim -->
+	<script src="js/jquery.menu-aim.js"> </script>
+	<script src="js/main.js"></script> <!-- Resource jQuery -->
+	<!-- //menu js aim -->
+	<!-- for bootstrap working -->
+		<script src="js/bootstrap.js"></script>
+<!-- //for bootstrap working -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			var defaults = {
+	  			containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear'
+	 		};
+			*/
+
+			$().UItoTop({ easingType: 'easeOutQuart' });
+
+		});
+	</script>
+	<a href="#" id="toTop" style="display: none;"><span id="toTopHover"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+	<!-- for smooth scrolling -->
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+	</script>
+	<!-- //for smooth scrolling -->
+
+<!-- //body -->
+
+<!-- //html -->
+</div><a href="#" id="toTop">To Top</a></body></html>

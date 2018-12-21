@@ -1,0 +1,591 @@
+<html><!-- head --><head>
+<title>index</title>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all"><!-- bootstrap-CSS -->
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css" media="all"><!-- Fontawesome-CSS -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+<!-- Custom Theme files -->
+<link href="css/menu.css" rel="stylesheet" type="text/css" media="all"> <!-- menu style -->
+<!--theme-style-->
+<link href="css/style1.css" rel="stylesheet" type="text/css" media="all">
+<!--//theme-style-->
+<link rel="stylesheet" type="text/css" href="css/easy-responsive-tabs.css ">
+<!--meta data-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="Match Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design">
+<script type="application/x-javascript">function aa(id) {
+
+	var me = id
+	if(sessionStorage.getItem("email")==null){
+
+
+	}
+	else{
+	    console.log(me)
+		if(me == "Me") {
+            window.location.href = "self_profile.html"
+        }
+		else
+		    window.location.href = "search.html"
+	}
+
+
+}
+
+addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!--//meta data-->
+
+<!-- nav smooth scroll -->
+<script>
+
+
+$(document).ready(function(){
+    $(".dropdown").hover(
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+            $(this).toggleClass('open');
+        },
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+            $(this).toggleClass('open');
+        }
+    );
+});
+</script>
+<!-- //nav smooth scroll -->
+<!-- Calendar -->
+	<link rel="stylesheet" href="css/jquery-ui.css">
+	<script src="js/jquery-ui.js"></script>
+		<script>
+		  $(function() {
+			$( "#datepicker" ).datepicker();
+		 });
+		</script>
+<!-- //Calendar -->
+<link rel="stylesheet" href="css/intlTelInput.css">
+</head>
+<!-- //head -->
+<!-- body -->
+<body>
+
+	<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+    <script type="text/javascript" src="lib/url-template/url-template.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+    <script type="text/javascript" src="apigClient.js"></script>
+
+	<script type="application/javascript">
+		var apigClient = apigClientFactory.newClient();
+			window.onload = function(){
+				var signup_button = document.getElementById("signup_button");
+				var signin_button = document.getElementById("signin_button");
+				if(sessionStorage.getItem("email")!=null)
+					{
+						var register_panel=document.getElementById("signup_panel");
+						register_panel.style.display="None";
+
+						var nav_right = document.getElementById("nav_right");
+						var li = document.createElement("li");
+						li.id = "signout_button";
+						var a = document.createElement("a");
+						a.href="#";
+						a.onclick=function(){
+							sessionStorage.removeItem("email");
+							var nav = document.getElementById("nav_right");
+							var l = document.getElementById("signout_button");
+							nav.removeChild(l);
+							var register_panel=document.getElementById("signup_panel");
+							register_panel.style.display="block";
+						}
+						var t = document.createElement("text");
+   	 					var txtNode = document.createTextNode("Sign Out");
+   	 					t.appendChild(txtNode);
+   	 					a.appendChild(t);
+   	 					li.appendChild(a);
+   	 					nav_right.appendChild(li);
+					}
+				else{
+					var register_panel=document.getElementById("signup_panel");
+					register_panel.style.display="block";
+				}
+	            signup_button.onclick = function(){
+	            	var name = document.getElementById("signup_name");
+	            	var gender_female = document.getElementById("signup_female");
+	            	var gender_male = document.getElementById("signup_male");
+//	           		var signup_button = document.getElementById("signup_button");
+	           		var pass = document.getElementById("signup_password");
+	           		var email = document.getElementById("signup_email");
+	        		var dob = document.getElementById("datepicker");
+	            	var gender = "Male";
+					if(email.value == "" || pass.value == "")
+	            	{
+	            		window.alert("Wrong Email or Password!");
+	            		return;
+	            	}
+
+	            	if(pass.value.length<8)
+	            	{
+	            		window.alert("The length of password should be at least 8");
+	            		return;
+	            	}
+
+
+	            	var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+					if(!reg.test(email.value)){
+				　　　　alert("The email is not valid");
+				　　　　return;
+				　　	}
+	            	if(gender_female.checked)
+	            		gender = "Female";
+	                var str = "";
+					var body = {
+						"messages": [
+	    				{
+	      					"type": "signup",
+	      					"unstructured": {
+	        				"id": "string",
+	        				"username": email.value,
+	        				"password": pass.value,
+	        				"name": name.value,
+	        				"birth": dob.value,
+	        				"gender": gender.value,
+	        				"timestamp": "string"
+	        				}
+	      				}
+	    				]
+					};
+					apigClient.studentPost(null, body)
+					.then(function(result){
+						var res = result["data"]["Item"];
+						console.log(result);
+						if(res == "None")
+						{
+							alert("The email already exists");
+							return;
+						}
+						else{
+							var register_panel=document.getElementById("signup_panel");
+							register_panel.style.display="None";
+							sessionStorage.setItem("email", email.value);
+							var nav_right = document.getElementById("nav_right");
+//							<li><a href="about.html">About</a></li>
+							var li = document.createElement("li");
+							li.id = "signout_button";
+							var a = document.createElement("a");
+							a.href="#";
+							a.onclick=function(){
+								sessionStorage.removeItem("email");
+								var nav = document.getElementById("nav_right");
+								var l = document.getElementById("signout_button");
+								nav.removeChild(l);
+								var register_panel=document.getElementById("signup_panel");
+								register_panel.style.display="block";
+							}
+							var t = document.createElement("text");
+   	 						var txtNode = document.createTextNode("Sign Out");
+   	 						t.appendChild(txtNode);
+   	 						a.appendChild(t);
+   	 						li.appendChild(a);
+   	 						nav_right.appendChild(li);
+						}
+
+					}).catch( function(result){
+
+					});
+	        	}
+
+//---------------------------------------------------------------
+
+	            signin_button.onclick = function(){
+
+
+	            	var username = document.getElementById("signin_username");
+	           		var pass = document.getElementById("signin_password");
+					if(username.value == "" || pass.value == ""){
+					    window.alert("Wrong Email or Password")
+						return;
+					}
+	                var str = "";
+					var body = {
+						"messages": [
+	    				{
+	    					"type": "signin",
+	      					"unstructured": {
+	        				"id": "string",
+	        				"username": username.value,
+	        				"password": pass.value
+	        				}
+	      				}
+	    				]
+					};
+
+
+					apigClient.studentPost(null, body)
+					.then(function(result){
+
+						var res = result["data"]["Item"];
+						if( res == "None")
+						{
+						    window.alert("wrong email or password")
+							return
+
+						}
+						else{
+
+							sessionStorage.setItem("email", username.value);
+							var nav_right = document.getElementById("nav_right");
+							var li = document.createElement("li");
+							li.id = "signout_button";
+							var a = document.createElement("a");
+							a.href="#";
+							a.onclick=function(){
+								sessionStorage.removeItem("email");
+								var nav = document.getElementById("nav_right");
+								var l = document.getElementById("signout_button");
+								nav.removeChild(l);
+								var register_panel=document.getElementById("signup_panel");
+								register_panel.style.display="block";
+							}
+							var t = document.createElement("text");
+   	 						var txtNode = document.createTextNode("Sign Out");
+   	 						t.appendChild(txtNode);
+   	 						a.appendChild(t);
+   	 						li.appendChild(a);
+   	 						nav_right.appendChild(li);
+   	 						window.location.reload();
+						}
+
+					}).catch( function(result){
+	    				console.log(result);
+					});
+	        	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------------------------------------------------------
+	     	}
+	</script>
+
+
+<!-- header -->
+<header>
+	<!--  Navigation Start -->
+ <div class="navbar navbar-inverse-blue navbar">
+    <!--<div class="navbar navbar-inverse-blue navbar-fixed-top">-->
+      <div class="navbar-inner">
+        <div class="container">
+          <div class="menu">
+					<div class="cd-dropdown-wrapper">
+						<a class="cd-dropdown-trigger dropdown-is-active" href="#0">Find Study Mates</a>
+						 <!-- .cd-dropdown -->
+					</div> <!-- .cd-dropdown-wrapper -->
+				</div>
+           <div class="pull-right">
+          	<nav class="navbar nav_bottom" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+		  <div class="navbar-header nav_2">
+		      <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">Menu
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		   </div>
+		   <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+		        <ul id="nav_right" class="nav navbar-nav nav_1">
+		            <li class="active"><a href="home.html">Home</a></li>
+		            <li><a href="app.html">Match</a></li>
+		            <li><a href="#" onclick="aa(this.id)" id="sea">Search</a></li>
+		            <li><a href="#" onclick="aa(this.id)" id="Me">Me</a></li>
+		            <li class="dropdown">
+
+		              <ul class="dropdown-menu" role="menu" style="display: none;">
+		                <div class="banner-bottom-login">
+		<div class="w3agile_banner_btom_login">
+			<form action="#" method="post">
+				<div class="w3agile__text w3agile_banner_btom_login_left">
+					<h4>I'm looking for a</h4>
+					<select id="country" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">Bride</option>
+						<option value="null">Groom</option>
+					</select>
+				</div>
+				<div class="w3agile__text w3agile_banner_btom_login_left1">
+					<h4>Aged</h4>
+					<select id="country1" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">20</option>
+						<option value="null">21</option>
+						<option value="null">22</option>
+						<option value="null">23</option>
+						<option value="null">24</option>
+						<option value="null">25</option>
+						<option value="null">- - -</option>
+					</select>
+					<span>To </span>
+					<select id="country2" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">30</option>
+						<option value="null">31</option>
+						<option value="null">32</option>
+						<option value="null">33</option>
+						<option value="null">34</option>
+						<option value="null">35</option>
+						<option value="null">- - -</option>
+					</select>
+				</div>
+				<div class="w3agile__text w3agile_banner_btom_login_left2">
+					<h4>Religion</h4>
+					<select id="country3" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">Hindu</option>
+						<option value="null">Muslim</option>
+						<option value="null">Christian</option>
+						<option value="null">Sikh</option>
+						<option value="null">Jain</option>
+						<option value="null">Buddhist</option>
+						<option value="null">No Religious Belief</option>
+					</select>
+				</div>
+				<div class="w3agile_banner_btom_login_left3">
+					<input type="submit" value="Search">
+				</div>
+				<div class="clearfix"> </div>
+			</form>
+		</div>
+	</div>
+		              </ul>
+		            </li>
+		            <li class="last"></li>
+		        </ul>
+		     </div><!-- /.navbar-collapse -->
+		    </nav>
+		   </div> <!-- end pull-right -->
+          <div class="clearfix"> </div>
+        </div> <!-- end container -->
+      </div> <!-- end navbar-inner -->
+    </div> <!-- end navbar-inverse-blue -->
+<!-- ============================  Navigation End ============================ -->
+</header>
+<!-- /header -->
+
+
+
+<div class="w3layouts-banner" id="home">
+<div id="signin_signup" class="container">
+	<div class="logo">
+		<h1><a class="cd-logo link link--takiri" href="home.html">Start Match Study Mates! <span><i class="fa fa-heart" aria-hidden="true"></i>Good Good Study</span></a></h1>
+	</div>
+	<div class="clearfix"></div>
+	<div id="signup_panel" class="agileits-register" style="display: block;">
+		<h3 stype="">Register NOW!</h3>
+		<!--<form action="#" method="post">-->
+			<div class="w3_modal_body_grid w3_modal_body_grid1">
+				<span>Name:</span>
+				<input id="signup_name" type="text" name="Name" placeholder=" " required="">
+			</div>
+			<div class="w3_modal_body_grid">
+				<span>Gender:</span>
+				<div class="w3_gender">
+					<div class="colr ert">
+						<label class="radio"><input id="signup_male" type="radio" name="radio" checked=""><i></i>Male</label>
+					</div>
+					<div class="colr">
+						<label class="radio"><input id="signup_female" type="radio" name="radio"><i></i>Female</label>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="w3_modal_body_grid w3_modal_body_grid1">
+				<span>Date Of Birth:</span>
+				<input class="date hasDatepicker" id="datepicker" name="Text" type="text" value="mm/dd/yyyy" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '2/08/2013';}" required="">
+			</div>
+
+			<div class="w3_modal_body_grid">
+				<span>Email:</span>
+				<input id="signup_email" type="email" name="Email" placeholder=" " required="">
+			</div>
+			<div class="w3_modal_body_grid w3_modal_body_grid1">
+				<span>Password:</span>
+				<input id="signup_password" type="password" name="Password" placeholder=" " required="">
+			</div>
+			<div class="w3-agree">
+				<input type="checkbox" id="c1" name="cc">
+				<label class="agileits-agree">I have read &amp; agree to the <a href="terms.html">Terms and Conditions</a></label>
+			</div>
+			<input id="signup_button" type="submit" value="Register me">
+			<div class="clearfix"></div>
+			<p class="w3ls-login">Already a member? <a href="#" data-toggle="modal" data-target="#myModal">Login</a></p>
+			<!--</form>-->
+		</div>
+		<!-- Modal -->
+				<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+				  <div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+					  <div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<h4 class="modal-title">Login to Continue</h4>
+					  </div>
+					  <div class="modal-body">
+						<div class="login-w3ls">
+							<!--<form id="signin" action="#" method="post">-->
+							<label>User Name </label>
+							<input id="signin_username" type="text" name="User Name" placeholder="Username">
+							<label>Password</label>
+							<input id="signin_password" type="password" name="Password" placeholder="Password">
+							<div class="w3ls-loginr">
+								<input type="checkbox" id="brand" name="checkbox" value="">
+								<span> Remember me ?</span>
+								<a href="#">Forgot password ?</a>
+							</div>
+							<div class="clearfix"> </div>
+							<input id="signin_button" type="submit" name="submit" value="Login">
+							<div class="clearfix"> </div>
+							<div class="social-icons">
+								<ul>
+									<li><a href="#"><span class="icons"><i class="fa fa-facebook" aria-hidden="true"></i></span><span class="text">Facebook</span></a></li>
+									<li class="twt"><a href="#"><span class="icons"><i class="fa fa-twitter" aria-hidden="true"></i></span><span class="text">Twitter</span></a></li>
+								</ul>
+								<div class="clearfix"> </div>
+							</div>
+						<!--	</form>-->
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>
+				<!-- //Modal -->
+	</div>
+</div>
+<!-- Find your soulmate -->
+
+	<!-- //Find your soulmate -->
+
+		<!-- featured profiles -->
+
+			<script type="text/javascript" src="js/jquery.flexisel.js"></script><!-- flexisel-js -->
+					<script type="text/javascript">
+						 $(window).load(function() {
+							$("#flexiselDemo3").flexisel({
+								visibleItems:1,
+								animationSpeed: 1000,
+								autoPlay: false,
+								autoPlaySpeed: 5000,
+								pauseOnHover: true,
+								enableResponsiveBreakpoints: true,
+								responsiveBreakpoints: {
+									portrait: {
+										changePoint:480,
+										visibleItems:1
+									},
+									landscape: {
+										changePoint:640,
+										visibleItems:1
+									},
+									tablet: {
+										changePoint:768,
+										visibleItems:1
+									}
+								}
+							});
+
+						});
+					   </script>
+			<!-- //featured profiles -->
+
+
+	<!-- Assisted Service -->
+
+	<!-- //Assisted Service -->
+
+
+	<!-- Get started -->
+
+	<!-- //Get started -->
+
+<!-- footer -->
+<footer>
+
+	<div class="copy-right">
+		<div class="container">
+			<p>Copyright © 2018.Exployers All rights reserved.&gt;</p>
+		</div>
+	</div>
+</footer>
+<!-- //footer -->
+<!-- menu js aim -->
+	<script src="js/jquery.menu-aim.js"> </script>
+	<script src="js/main.js"></script> <!-- Resource jQuery -->
+	<!-- //menu js aim -->
+	<!-- for bootstrap working -->
+		<script src="js/bootstrap.js"></script>
+<!-- //for bootstrap working -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			var defaults = {
+	  			containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear'
+	 		};
+			*/
+
+			$().UItoTop({ easingType: 'easeOutQuart' });
+
+		});
+	</script>
+	<a href="#" id="toTop" style="display: none;"><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+	<!-- for smooth scrolling -->
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+	</script>
+	<!-- //for smooth scrolling -->
+
+
+<!-- //body -->
+
+<!-- //html -->
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><a href="#" id="toTop">To Top</a></body></html>

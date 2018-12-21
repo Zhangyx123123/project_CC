@@ -1,0 +1,1268 @@
+<html><!-- head --><head></head><body>x
+
+<title>Search</title>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all"><!-- bootstrap-CSS -->
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css" media="all"><!-- Fontawesome-CSS -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+<!-- Custom Theme files -->
+<link href="css/menu.css" rel="stylesheet" type="text/css" media="all"> <!-- menu style -->
+<!--theme-style-->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+<!--//theme-style-->
+ <link rel="stylesheet" type="text/css" href="css/easy-responsive-tabs.css ">
+<!--meta data-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="Match Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!--//meta data-->
+<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apigClient.js"></script>
+<!-- nav smooth scroll -->
+<script>
+$(document).ready(function(){
+    $(".dropdown").hover(
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideDown("fast");
+            $(this).toggleClass('open');
+        },
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).slideUp("fast");
+            $(this).toggleClass('open');
+        }
+    );
+
+    var goals = []
+    var apigClient = apigClientFactory.newClient();
+    var body = {
+              "messages": [
+                {
+                    "type": "get",
+                    "unstructured": {
+                    "id": "string",
+                    "email":sessionStorage.getItem("email")
+                    }
+                  }
+                ]
+            };
+            apigClient.profilePost(null, body)
+                    .then(function(result){
+
+                      var res = result["data"]["Item"]
+
+                      if(res == "None") {console.log(123123)}
+                      else{
+
+
+                        var status = res['goals']["L"][0]["M"];
+
+
+                        for(x in status){
+                            if(status[x]["S"] == "null"){
+                                goals.push(x)
+							}
+						}
+
+						var i;
+
+
+						var g = document.getElementById("Goal");
+
+						for(i = 0; i < goals.length; i++){
+							op = document.createElement("option");
+
+							op.innerHTML = goals[i]
+							g.appendChild(op)
+						}
+
+                      }
+                    }).catch( function(result){
+
+                    });
+
+
+});
+function postToServer(){
+      var ageF = document.getElementById("ageFrom");
+	  var idx = ageF.selectedIndex;
+	  var ageF_value = ageF.options[idx].value;
+
+	  var ageT = document.getElementById("ageTo");
+	  var idx = ageT.selectedIndex;
+	  var ageT_value = ageT.options[idx].value;
+
+	  var gender = document.querySelector('input[name=gender]:checked').value;
+	  var country = document.getElementById("Country_general").value;
+
+
+	  var univer = document.getElementById("university").value;
+	  var degree = document.getElementById("degree").value;
+	  var goal = document.getElementById("Goal");
+	  var idx = goal.selectedIndex;
+	  var goal = goal.options[idx].innerText;
+	  var i;
+	  var l = []
+	  for(i = 1; i <= 3; i++){
+		  var s = "sch";
+		  s = s + i;
+		  if ($('#'+s).is(':checked')){
+			  l.push($('#'+s).val())
+		  }
+	  }
+	  var apigClient = apigClientFactory.newClient();
+	  var body = {
+							"message": [
+							{
+								"type": "login",
+								"unstructured": {
+									"email":sessionStorage.getItem("email"),
+									"ageF" : ageF_value,
+									"ageT" : ageT_value,
+									"gender" : gender,
+									"country" : country,
+									"university":univer,
+									"degree":degree,
+									"schedule":l,
+									"goals" : goal
+								}
+							}
+							]
+	  };
+		  console.log(body)
+			  apigClient.matchPost(null, body)
+								.then(function(result){
+
+									var res = result["data"]
+									console.log(res)
+									if(res == "None")
+									{
+										console.log("sssssssssssssssss");
+										username.style.borderColor="red";
+										pass.style.borderColor="red";
+										error = document.getElementById("error");
+										error.innerHTML = "Error Username or password";
+									}
+									else{
+										  var pic = document.getElementById("flexiselDemo3");
+										  pic.innerHTML = "";
+										  for (var i = 0; i < res.length; i++){
+											  var pic = document.getElementById("flexiselDemo3");
+											  var d1 = document.createElement("div");
+											  d1.style = "float:left;"
+											  d1.className = "col-md-3 biseller-column";
+											  var a1 = document.createElement("a");
+											  a1.id = "click" + i
+											  a1.onclick = function() {
+											      answer = confirm("Make friend?" + this.id);
+											      if (answer) {
+											          var child = document.getElementById("ur_email"+this.id.substring(this.id.length-1))
+											          console.log(child);
+											          var goal_1 = document.getElementById("Goal");
+													  var idx = goal_1.selectedIndex;
+													  var goal_1 = goal_1.options[idx].innerText;
+											          var apigClient = apigClientFactory.newClient();
+											          var body = {
+																			"message": [
+																			{
+																				"type": "make_friend",
+																				"unstructured": {
+																					"email":sessionStorage.getItem("email"),
+																					"ur_email" : child.innerText.substring(7),
+																					"goal" : goal_1
+																				}
+																			}
+																			]
+													  };
+											          console.log(body)
+											          apigClient.matchPost(null, body)
+														.then(function(result){
+
+														  var res = result
+
+														  if(res == "None") {console.log(123123)}
+														  else{
+															  console.log(res)
+
+														  }
+														}).catch( function(result){
+
+														});
+                                                  }
+
+
+
+											  };
+											  // a1.href = "groom_profile.html";
+											  var d2 = document.createElement("div");
+											  d2.className = "profile-image";
+											  var img = document.createElement("img");
+											  img.src = res[i]["img"];
+											  img.className="img-responsive";
+											  img.alt="profile image";
+											  img.style = "width:318px;height:316px";
+											  var d3 = document.createElement("div");
+											  d3.className = "agile-overlay";
+											  var h4 = document.createElement("h4")
+											  h4.innerHTML = "email: " + res[i]["email"]
+											  h4.id = "ur_email" + i
+											  var ul = document.createElement("ul")
+											  for(x in res[i]){
+											      if(x!="email" && x!="waitfriends" && x!="img" && x!="religion") {
+                                                      var span = document.createElement('span');
+                                                      if(res[i][x] != " " && res[i][x] != "") {
+                                                          console.log(res[i][x]);
+                                                          span.innerHTML = x
+                                                          var li = document.createElement("li")
+                                                          li.className = "nbs-flexisel-item"
+                                                          li.appendChild(span)
+                                                          li.append(": " + res[i][x])
+                                                          ul.appendChild(li)
+                                                      }
+                                                  }
+											  }
+											  d3.appendChild(h4);
+											  d3.appendChild(ul)
+											  d2.appendChild(img);
+											  d2.appendChild(d3);
+											  a1.appendChild(d2);
+											  d1.appendChild(a1);
+											  // d1.appendChild(d2);
+											  // li.appendChild(d1);
+											  pic.appendChild(d1);
+											}
+									}
+								}).catch( function(result){
+
+								});
+}
+function submit_by_id() {
+
+//   for (var i = 0; i < 8; i++){
+//   var pic = document.getElementById("flexiselDemo3");
+//   var d1 = document.createElement("div");
+//   d1.className = "col-md-3 biseller-column";
+//   var a1 = document.createElement("a");
+//   a1.href = "groom_profile.html";
+//   var d2 = document.createElement("div");
+//   d2.className = "profile-image";
+//   var img = document.createElement("img");
+//   img.src="images/p1.jpg";
+//   img.className="img-responsive";
+//   img.alt="profile image";
+//   var d3 = document.createElement("div");
+//   d3.className = "agile-overlay";
+//   var h4 = document.createElement("h4");
+//   h4.innerHTML = "Profile ID: 458wqeqwewq645";
+//   d3.appendChild(h4);
+//   d2.appendChild(img);
+//   d2.appendChild(d3);
+//   a1.appendChild(d2);
+//   d1.appendChild(a1);
+//   // d1.appendChild(d2);
+//   // li.appendChild(d1);
+//   pic.appendChild(d1);
+// }
+  var goals = []
+  var apigClient = apigClientFactory.newClient();
+    var body = {
+              "messages": [
+                {
+                    "type": "get",
+                    "unstructured": {
+                    "id": "string",
+                    "email":"ly1"
+                    }
+                  }
+                ]
+            };
+            apigClient.profilePost(null, body)
+                    .then(function(result){
+                      var res = result["data"]["Item"]
+                      // console.log(res);
+                      if(res == "None") {}
+                      else{
+
+                        var status = res['goals']["L"][0]["M"];
+
+                        for(x in status){
+                            if(status[x]["S"] == "null"){
+                                goals.push(x)
+							}
+						}
+                        console.log(goals);
+                      }
+                    }).catch( function(result){
+
+                    });
+
+  setTimeout(function(){
+      console.log(goals);
+     postToServer()
+  },100);
+
+}
+</script>
+<!-- //nav smooth scroll -->
+<script type="text/javascript" src="js/jquery.flexisel.js"></script><!-- flexisel-js -->
+					<!-- <script type="text/javascript">
+						 $(window).load(function() {
+							$("#flexiselDemo3").flexisel({
+								visibleItems:8,
+								animationSpeed: 1000,
+								autoPlay: false,
+								autoPlaySpeed: 5000,
+								pauseOnHover: true,
+								enableResponsiveBreakpoints: true,
+								responsiveBreakpoints: {
+									portrait: {
+										changePoint:480,
+										visibleItems:8
+									},
+									landscape: {
+										changePoint:640,
+										visibleItems:8
+									},
+									tablet: {
+										changePoint:768,
+										visibleItems:8
+									}
+								}
+							});
+
+						});
+					   </script> -->
+
+<!-- //head -->
+<!-- body -->
+
+<!-- header -->
+
+<header>
+	<!--  Navigation Start -->
+ <div class="navbar navbar-inverse-blue navbar">
+    <!--<div class="navbar navbar-inverse-blue navbar-fixed-top">-->
+      <div class="navbar-inner">
+        <div class="container">
+          <div class="menu">
+					<div class="cd-dropdown-wrapper">
+
+						<nav class="cd-dropdown">
+							<a href="#0" class="cd-close">Close</a>
+							<ul class="cd-dropdown-content">
+								<li><a href="matches.html">All Profiles</a></li>
+								<li class="has-children">
+									<a href="#">Mother Tongue</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="l_list.html">Language 1</a></li>
+												<li><a href="l_list.html">Language 2</a> </li>
+												<li><a href="l_list.html">Language 3</a></li>
+												<li><a href="l_list.html">Language 4</a></li>
+												<li><a href="l_list.html">Language 5</a></li>
+												<li><a href="l_list.html">Language 6</a></li>
+												<li><a href="l_list.html">Language 7</a></li>
+												<li><a href="l_list.html">Language 8</a></li>
+												<li><a href="l_list.html">Language 9</a></li>
+												<li><a href="l_list.html">Language 10</a></li>
+												<li><a href="l_list.html">Language 11</a></li>
+												<li><a href="l_list.html">Language 12</a></li>
+												<li><a href="l_list.html">Language 13</a></li>
+												<li><a href="l_list.html">Language 14</a></li>
+												<li><a href="l_list.html">Language 15</a></li>
+												<li><a href="l_list.html">Language 16</a></li>
+												<li><a href="l_list.html">Language 17</a></li>
+												<li><a href="l_list.html">Language 18</a></li>
+												<li><a href="l_list.html">Language 19</a></li>
+												<li><a href="l_list.html">Language 20</a></li>
+
+									</ul> <!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="#">Caste</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="c_list.html">Caste 1</a></li>
+												<li><a href="c_list.html">Caste 2</a></li>
+												<li><a href="c_list.html">Caste 3</a></li>
+												<li><a href="c_list.html">Caste 4</a></li>
+												<li><a href="c_list.html">Caste 5</a></li>
+												<li><a href="c_list.html">Caste 6</a></li>
+												<li><a href="c_list.html">Caste 7</a></li>
+												<li><a href="c_list.html">Caste 8</a></li>
+												<li><a href="c_list.html">Caste 9</a></li>
+												<li><a href="c_list.html">Caste 10</a></li>
+												<li><a href="c_list.html">Caste 11</a></li>
+												<li><a href="c_list.html">Caste 12</a></li>
+												<li><a href="c_list.html">Caste 13</a></li>
+												<li><a href="c_list.html">Caste 14</a></li>
+												<li><a href="c_list.html">Caste 15</a></li>
+												<li><a href="c_list.html">Caste 16</a></li>
+												<li><a href="c_list.html">Caste 17</a></li>
+												<li><a href="c_list.html">Caste 18</a></li>
+												<li><a href="c_list.html">Caste 19</a></li>
+												<li><a href="c_list.html">Caste 20</a></li>
+												<li><a href="c_list.html">Caste 21</a></li>
+												<li><a href="c_list.html">Caste 22</a></li>
+												<li><a href="c_list.html">Caste 23</a></li>
+												<li><a href="c_list.html">Caste 24</a></li>
+												<li><a href="c_list.html">Caste 25</a></li>
+												<li><a href="c_list.html">Caste 26</a></li>
+									</ul> <!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="products2.html">Religion</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="r_list.html">Religion 1</a></li>
+												<li><a href="r_list.html">Religion 2</a></li>
+												<li><a href="r_list.html">Religion 3</a></li>
+												<li><a href="r_list.html">Religion 4</a></li>
+												<li><a href="r_list.html">Religion 5</a></li>
+												<li><a href="r_list.html">Religion 6</a></li>
+												<li><a href="r_list.html">Religion 7</a></li>
+												<li><a href="r_list.html">Religion 8</a></li>
+												<li><a href="r_list.html">Religion 9</a></li>
+												<li><a href="r_list.html">Religion 10</a></li>
+												<li><a href="r_list.html">Religion 11</a></li>
+												<li><a href="r_list.html">Religion 12</a></li>
+												<li><a href="r_list.html">Religion 13</a></li>
+												<li><a href="r_list.html">Religion 14</a></li>
+												<li><a href="r_list.html">Religion 15</a></li>
+												<li><a href="r_list.html">Religion 16</a></li>
+												<li><a href="r_list.html">Religion 17</a></li>
+									</ul><!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="#">City</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="city_list.html">City 1</a></li>
+												<li><a href="city_list.html">City 2</a></li>
+												<li><a href="city_list.html">City 3</a></li>
+												<li><a href="city_list.html">City 4</a></li>
+												<li><a href="city_list.html">City 5</a></li>
+												<li><a href="city_list.html">City 6</a></li>
+												<li><a href="city_list.html">City 7</a></li>
+												<li><a href="city_list.html">City 8</a></li>
+												<li><a href="city_list.html">City 9</a></li>
+												<li><a href="city_list.html">City 10</a></li>
+												<li><a href="city_list.html">City 11</a></li>
+												<li><a href="city_list.html">City 12</a></li>
+												<li><a href="city_list.html">City 13</a></li>
+												<li><a href="city_list.html">City 14</a></li>
+												<li><a href="city_list.html">City 15</a></li>
+												<li><a href="city_list.html">City 16</a></li>
+												<li><a href="city_list.html">City 17</a></li>
+												<li><a href="city_list.html">City 18</a></li>
+												<li><a href="city_list.html">City 19</a></li>
+												<li><a href="city_list.html">City 20</a></li>
+												<li><a href="city_list.html">City 21</a></li>
+												<li><a href="city_list.html">City 22</a></li>
+												<li><a href="city_list.html">City 23</a></li>
+												<li><a href="city_list.html">City 24</a></li>
+												<li><a href="city_list.html">City 25</a></li>
+												<li><a href="city_list.html">City 26</a></li>
+												<li><a href="city_list.html">City 27</a></li>
+												<li><a href="city_list.html">City 28</a></li>
+												<li><a href="city_list.html">City 29</a></li>
+												<li><a href="city_list.html">City 30</a></li>
+												<li><a href="city_list.html">City 31</a></li>
+												<li><a href="city_list.html">City 32</a></li>
+												<li><a href="city_list.html">City 33</a></li>
+												<li><a href="city_list.html">City 34</a></li>
+												<li><a href="city_list.html">City 35</a></li>
+												<li><a href="city_list.html">City 36</a></li>
+									</ul><!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="#">Occupation</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="o_list.html">IT Software </a></li>
+												<li><a href="o_list.html">Teacher  </a></li>
+												<li><a href="o_list.html">Business man </a></li>
+												<li><a href="o_list.html">Lawyers</a></li>
+												<li><a href="o_list.html">Defence </a></li>
+												<li><a href="o_list.html">IAS </a></li>
+												<li><a href="o_list.html">Govt.Services </a></li>
+												<li><a href="o_list.html">Doctors </a></li>
+									</ul><!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="#">State</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="s_list.html">State 1</a></li>
+												<li><a href="s_list.html">State 2</a></li>
+												<li><a href="s_list.html">State 3</a></li>
+												<li><a href="s_list.html">State 4</a></li>
+												<li><a href="s_list.html">State 5</a></li>
+												<li><a href="s_list.html">State 6</a></li>
+												<li><a href="s_list.html">State 7</a></li>
+												<li><a href="s_list.html">State 8</a></li>
+												<li><a href="s_list.html">State 9</a></li>
+												<li><a href="s_list.html">State 10</a></li>
+												<li><a href="s_list.html">State 11</a></li>
+												<li><a href="s_list.html">State 12</a></li>
+												<li><a href="s_list.html">State 13</a></li>
+												<li><a href="s_list.html">State 14</a></li>
+												<li><a href="s_list.html">State 15</a></li>
+												<li><a href="s_list.html">State 16</a></li>
+												<li><a href="s_list.html">State 17</a></li>
+												<li><a href="s_list.html">State 18</a></li>
+												<li><a href="s_list.html">State 19</a></li>
+												<li><a href="s_list.html">State 20</a></li>
+												<li><a href="s_list.html">State 21</a></li>
+												<li><a href="s_list.html">State 22</a></li>
+												<li><a href="s_list.html">State 23</a></li>
+												<li><a href="s_list.html">State 24</a></li>
+												<li><a href="s_list.html">State 25</a></li>
+												<li><a href="s_list.html">State 26</a></li>
+												<li><a href="s_list.html">State 27</a></li>
+												<li><a href="s_list.html">State 28</a></li>
+												<li><a href="s_list.html">State 29</a></li>
+												<li><a href="s_list.html">State 30</a></li>
+												<li><a href="s_list.html">State 31</a></li>
+												<li><a href="s_list.html">State 32</a></li>
+												<li><a href="s_list.html">State 33</a></li>
+												<li><a href="s_list.html">State 34</a></li>
+												<li><a href="s_list.html">State 35</a></li>
+												<li><a href="s_list.html">State 36</a></li>
+												<li><a href="s_list.html">State 37</a></li>
+												<li><a href="s_list.html">State 38</a></li>
+												<li><a href="s_list.html">State 39</a></li>
+												<li><a href="s_list.html">State 40</a></li>
+												<li><a href="s_list.html">State 41</a></li>
+												<li><a href="s_list.html">State 42</a></li>
+												<li><a href="s_list.html">State 43</a></li>
+												<li><a href="s_list.html">State 44</a></li>
+												<li><a href="s_list.html">State 45</a></li>
+									</ul><!-- .cd-secondary-dropdown -->
+								</li> <!-- .has-children -->
+								<li class="has-children">
+									<a href="#">NRI</a>
+									<ul class="cd-secondary-dropdown is-hidden">
+										<li class="go-back"><a href="#">Menu</a></li>
+												<li><a href="nri_list.html">Country 1</a></li>
+												<li><a href="nri_list.html">Country 2</a></li>
+												<li><a href="nri_list.html">Country 3</a></li>
+												<li><a href="nri_list.html">Country 4</a></li>
+												<li><a href="nri_list.html">Country 5</a></li>
+												<li><a href="nri_list.html">Country 6</a></li>
+												<li><a href="nri_list.html">Country 7</a></li>
+												<li><a href="nri_list.html">Country 8</a></li>
+												<li><a href="nri_list.html">Country 9</a></li>
+												<li><a href="nri_list.html">Country 10</a></li>
+												<li><a href="nri_list.html">Country 11</a></li>
+												<li><a href="nri_list.html">Country 12</a></li>
+									</ul><!-- .cd-secondary-dropdown -->
+								</li>
+							</ul> <!-- .cd-dropdown-content -->
+					  </nav> <!-- .cd-dropdown -->
+					</div> <!-- .cd-dropdown-wrapper -->
+				</div>
+           <div class="pull-right">
+          	<nav class="navbar nav_bottom" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+		  <div class="navbar-header nav_2">
+		      <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">Menu
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		   </div>
+		   <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+		        <ul class="nav navbar-nav nav_1">
+		            <li><a href="home.html">Home</a></li>
+		            <li><a href="app.html">Match</a></li>
+		            <li class="active"><a href="search.html">Search</a></li>
+		            <li></li>
+					  <!--<li class="dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search<span class="caret"></span></a>
+		              <ul class="dropdown-menu" role="menu">
+		                <li><a href="search.html">Regular Search</a></li>
+		                <li><a href="profile.html">Recently Viewed Profiles</a></li>
+		                <li><a href="search-id.html">Search By Profile ID</a></li>
+		                <li><a href="faq.html">Faq</a></li>
+		                <li><a href="shortcodes.html">Shortcodes</a></li>
+		              </ul>
+		            </li>-->
+		            <li class="dropdown">
+
+		              <ul class="dropdown-menu" role="menu" style="display: none;">
+		                <div class="banner-bottom-login">
+		<div class="w3agile_banner_btom_login">
+			<form action="#" method="post">
+				<div class="w3agile__text w3agile_banner_btom_login_left">
+					<h4>I'm looking for a</h4>
+					<select id="country" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">Bride</option>
+						<option value="null">Groom</option>
+					</select>
+				</div>
+				<div class="w3agile__text w3agile_banner_btom_login_left1">
+					<h4>Aged</h4>
+					<select id="country1" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">20</option>
+						<option value="null">21</option>
+						<option value="null">22</option>
+						<option value="null">23</option>
+						<option value="null">24</option>
+						<option value="null">25</option>
+						<option value="null">- - -</option>
+					</select>
+					<span>To </span>
+					<select id="country2" onchange="change_country(this.value)" class="frm-field required">
+						<option value="null">30</option>
+						<option value="null">31</option>
+						<option value="null">32</option>
+						<option value="null">33</option>
+						<option value="null">34</option>
+						<option value="null">35</option>
+						<option value="null">- - -</option>
+					</select>
+				</div>
+				<div class="w3agile__text w3agile_banner_btom_login_left2">
+					<h4>Religion</h4>
+					<select id="country3" onchange="change_country(this.value)" class="frm-field required">
+						<option value="Hindu">Hindu</option>
+						<option value="Muslim">Muslim</option>
+						<option value="Christian">Christian</option>
+						<option value="Sikh">Sikh</option>
+						<option value="Jain">Jain</option>
+						<option value="Buddhist">Buddhist</option>
+						<option value="None">No Religious Belief</option>
+					</select>
+				</div>
+				<div class="w3agile_banner_btom_login_left3">
+					<input type="submit" value="Search">
+				</div>
+				<div class="clearfix"> </div>
+			</form>
+		</div>
+	</div>
+		              </ul>
+		            </li>
+		            <li class="last"><a href="self_profile.html">Me</a></li>
+		        </ul>
+		     </div><!-- /.navbar-collapse -->
+		    </nav>
+		   </div> <!-- end pull-right -->
+          <div class="clearfix"> </div>
+        </div> <!-- end container -->
+      </div> <!-- end navbar-inner -->
+    </div> <!-- end navbar-inverse-blue -->
+<!--  Navigation End -->
+</header>
+<!-- /header -->
+
+	<!-- inner banner -->
+	<div class="w3layouts-inner-banner">
+	<div class="container">
+		<div class="logo">
+			<h1></h1>
+		</div>
+		<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- //inner banner -->
+
+<!-- breadcrumbs -->
+	<div class="w3layouts-breadcrumbs text-center">
+		<div class="container">
+			<span class="agile-breadcrumbs"><a href="home.html">Home</a> &gt; <span>Search</span></span>
+		</div>
+	</div>
+	<!-- //breadcrumbs -->
+
+
+	<!-- Search form -->
+	<div class="w3ls-list">
+		<div class="container">
+		<h2>Search your Match</h2>
+		<div class="col-md-9 profiles-list-agileits">
+		<!--Horizontal Tab-->
+			<div id="parentHorizontalTab" style="display: block; width: 100%; margin: 0px;">
+				<ul class="resp-tabs-list hor_1">
+
+
+				</ul>
+				<div class="resp-tabs-container hor_1" style="border-color: rgb(193, 193, 193);">
+					<h2 class="resp-accordion hor_1 resp-tab-active" role="tab" aria-controls="hor_1_tab_item-0" style="background: none; border-color: rgb(193, 193, 193);"><span class="resp-arrow"></span>Regular SearchRegular Search</h2><h2 class="resp-accordion hor_1" role="tab" aria-controls="hor_1_tab_item-1" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);"><span class="resp-arrow"></span>Advanced Search</h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-2"><span class="resp-arrow"></span></h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-3"><span class="resp-arrow"></span></h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-4"><span class="resp-arrow"></span></h2><div class="resp-tab-content hor_1 resp-tab-content-active" aria-labelledby="hor_1_tab_item-0" style="display:block">
+						<div class="w3_regular_search">
+							   <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Gender : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="radio" name="gender" value="male" checked=""> Male &nbsp;&nbsp;
+									<input type="radio" name="gender" value="female"> Female<br>
+
+									<!--<hr />
+									<p id="sel"></p><br />
+									<input id="btnRadio" type="button" value="Get Selected Value" />-->
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Age in years : </label>
+								<div class="w3agile__text col-sm-7 w3agile_banner_btom_login_left1">
+									<select id="ageFrom" onchange="change_country(this.value)" class="frm-field required">
+										<option value="20">20</option><option value="21">21</option><option value="22">22</option>
+										<option value="23">23</option><option value="24">24</option><option value="25">25</option>
+										<option value="26">26</option><option value="27">27</option><option value="28">28</option>
+									</select>
+									<span>To </span>
+									<select id="ageTo" onchange="change_country(this.value)" class="frm-field required">
+										<option value="20">20</option><option value="21">21</option><option value="22">22</option>
+										<option value="23">23</option><option value="24">24</option><option value="25">25</option>
+										<option value="26">26</option><option value="27">27</option><option value="28">28</option>
+									</select>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">University :</label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									  <input id="university" type="text" name="fname" placeholder=""><br>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div><div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Degree :</label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									  <input id="degree" type="text" name="fname" placeholder=""><br>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div><div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Country : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									  <input id="Country_general" type="text" name="fname" placeholder=""><br>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+
+							<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Goal : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select id="Goal">
+
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+
+
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Schedule : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<input id="sch1" type="checkbox" class="radio_1" value="morning">morning &nbsp;&nbsp;
+									<input id="sch2" type="checkbox" class="radio_1" value="noon">noon &nbsp;&nbsp;
+									<input id="sch3" type="checkbox" class="radio_1" value="evening">evening
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+
+							  <input type="submit" value="Search" onclick="submit_by_id()">
+
+						</div>
+					</div>
+					<h2 class="resp-accordion hor_1" role="tab" aria-controls="hor_1_tab_item-5" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);"><span class="resp-arrow"></span>Advanced Search</h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-6"><span class="resp-arrow"></span></h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-7"><span class="resp-arrow"></span></h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-8"><span class="resp-arrow"></span></h2><h2 class="resp-accordion hor_1" role="tab" style="background-color: rgb(245, 245, 245); border-color: rgb(193, 193, 193);" aria-controls="hor_1_tab_item-9"><span class="resp-arrow"></span></h2><div class="resp-tab-content hor_1" aria-labelledby="hor_1_tab_item-1" style="border-color: rgb(193, 193, 193);">
+						<div class="w3_regular_search">
+							<form action="#" method="post">
+							   <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Gender : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="radio" name="gender" value="male" checked=""> Male &nbsp;&nbsp;
+									<input type="radio" name="gender" value="female"> Female<br>
+
+									<!--<hr />
+									<p id="sel"></p><br />
+									<input id="btnRadio" type="button" value="Get Selected Value" />-->
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Age in years : </label>
+								<div class="w3agile__text col-sm-7 w3agile_banner_btom_login_left1">
+									<select id="" onchange="change_country(this.value)" class="frm-field required">
+										<option value="null">20</option><option value="null">21</option><option value="null">22</option>
+										<option value="null">23</option><option value="null">24</option><option value="null">25</option>
+										<option value="null">26</option><option value="null">27</option><option value="null">28</option>
+										<option value="null">29</option><option value="null">30</option><option value="null">31</option>
+										<option value="null">32</option><option value="null">33</option><option value="null">34</option>
+										<option value="null">35</option><option value="null">36</option><option value="null">37</option>
+										<option value="null">38</option><option value="null">39</option><option value="null">40</option>
+										<option value="null">41</option><option value="null">43</option><option value="null">44</option>
+										<option value="null">45</option><option value="null">46</option><option value="null">47</option>
+										<option value="null">48</option><option value="null">49</option><option value="null">50</option>
+										<option value="null">51</option><option value="null">52</option><option value="null">53</option>
+									</select>
+									<span>To </span>
+									<select id="" onchange="change_country(this.value)" class="frm-field required">
+										<option value="null">30</option><option value="null">31</option>
+										<option value="null">32</option><option value="null">33</option><option value="null">34</option>
+										<option value="null">35</option><option value="null">36</option><option value="null">37</option>
+										<option value="null">38</option><option value="null">39</option><option value="null">40</option>
+										<option value="null">41</option><option value="null">43</option><option value="null">44</option>
+										<option value="null">45</option><option value="null">46</option><option value="null">47</option>
+										<option value="null">48</option><option value="null">49</option><option value="null">50</option>
+										<option value="null">51</option><option value="null">52</option><option value="null">53</option>
+										<option value="null">54</option><option value="null">55</option><option value="null">56</option>
+										<option value="null">57</option><option value="null">58</option><option value="null">59</option>
+										<option value="null">60</option><option value="null">61</option><option value="null">62</option>
+										<option value="null">63</option><option value="null">64</option><option value="null">65</option>
+										<option value="null">66</option><option value="null">67</option><option value="null">68</option>
+										<option value="null">69</option><option value="null">70</option><option value="null">71</option>
+										<option value="null">72</option><option value="null">73</option><option value="null">74</option>
+										<option value="null">75</option>
+									</select>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Height : </label>
+								<div class="w3agile__text col-sm-7 w3agile_banner_btom_login_left1">
+									<select id="" onchange="change_country(this.value)" class="frm-field required">
+										<option value="1">4ft - 121 cm</option><option value="2">4ft 1in - 124cm</option><option value="3">4ft 2in - 127cm</option><option value="4">4ft 3in - 129cm</option><option value="5">4ft 4in - 132cm</option><option value="6">4ft 5in - 134cm</option><option value="7">4ft 6in - 137cm</option><option value="8">4ft 7in - 139cm</option><option value="9">4ft 8in - 142cm</option><option value="10">4ft 9in - 144cm</option><option value="11">4ft 10in - 147cm</option><option value="12">4ft 11in - 149cm</option><option value="13">5ft - 152cm</option><option value="14">5ft 1in - 154cm</option><option value="15">5ft 2in - 157cm</option><option value="16">5ft 3in - 160cm</option><option value="17">5ft 4in - 162cm</option><option value="18">5ft 5in - 165cm</option><option value="19">5ft 6in - 167cm</option><option value="20">5ft 7in - 170cm</option><option value="21">5ft 8in - 172cm</option><option value="22">5ft 9in - 175cm</option><option value="23">5ft 10in - 177cm</option><option value="24">5ft 11in - 180cm</option><option value="25">6ft - 182cm</option><option value="26">6ft 1in - 185cm</option><option value="27">6ft 2in - 187cm</option><option value="28">6ft 3in - 190cm</option><option value="29">6ft 4in - 193cm</option><option value="30">6ft 5in - 195cm</option><option value="31">6ft 6in - 198cm</option><option value="32">6ft 7in - 200cm</option><option value="33">6ft 8in - 203cm</option><option value="34">6ft 9in - 205cm</option><option value="35">6ft 10in - 208cm</option><option value="36">6ft 11in - 210cm</option><option value="37">7ft - 213cm</option>
+									</select>
+									<span>To </span>
+									<select id="" onchange="change_country(this.value)" class="frm-field required">
+										<option value="1">4ft - 121 cm</option><option value="2">4ft 1in - 124cm</option><option value="3">4ft 2in - 127cm</option><option value="4">4ft 3in - 129cm</option><option value="5">4ft 4in - 132cm</option><option value="6">4ft 5in - 134cm</option><option value="7">4ft 6in - 137cm</option><option value="8">4ft 7in - 139cm</option><option value="9">4ft 8in - 142cm</option><option value="10">4ft 9in - 144cm</option><option value="11">4ft 10in - 147cm</option><option value="12">4ft 11in - 149cm</option><option value="13">5ft - 152cm</option><option value="14">5ft 1in - 154cm</option><option value="15">5ft 2in - 157cm</option><option value="16">5ft 3in - 160cm</option><option value="17">5ft 4in - 162cm</option><option value="18">5ft 5in - 165cm</option><option value="19">5ft 6in - 167cm</option><option value="20">5ft 7in - 170cm</option><option value="21">5ft 8in - 172cm</option><option value="22">5ft 9in - 175cm</option><option value="23">5ft 10in - 177cm</option><option value="24">5ft 11in - 180cm</option><option value="25">6ft - 182cm</option><option value="26">6ft 1in - 185cm</option><option value="27">6ft 2in - 187cm</option><option value="28">6ft 3in - 190cm</option><option value="29">6ft 4in - 193cm</option><option value="30">6ft 5in - 195cm</option><option value="31">6ft 6in - 198cm</option><option value="32">6ft 7in - 200cm</option><option value="33">6ft 8in - 203cm</option><option value="34">6ft 9in - 205cm</option><option value="35">6ft 10in - 208cm</option><option value="36">6ft 11in - 210cm</option><option value="37" selected="">7ft - 213cm</option>
+									</select>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Marital Status : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="checkbox" class="radio_1"> Single &nbsp;&nbsp;
+									<input type="checkbox" class="radio_1" checked="checked"> Divorced &nbsp;&nbsp;
+									<input type="checkbox" class="radio_1" value="Cheese"> Widowed &nbsp;&nbsp;
+									<input type="checkbox" class="radio_1" value="Cheese"> Separated &nbsp;&nbsp;
+									<input type="checkbox" class="radio_1" value="Cheese"> Any
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Religion : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Hindu</option>
+										<option value="">Sikh</option>
+										<option value="">Jain-All</option>
+										<option value="">Jain-Digambar</option>
+										<option value="">Jain-Others</option>
+										<option value="">Muslim-All</option>
+										<option value="">Muslim-Shia</option>
+										<option value="">Muslim-Sunni</option>
+										<option value="">Muslim-Others</option>
+										<option value="">Christian-All</option>
+										<option value="">Christian-Catholic</option>
+										<option value="">Jewish</option>
+										<option value="">Inter-Religion</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Religion : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Hindu</option>
+										<option value="">Sikh</option>
+										<option value="">Jain-All</option>
+										<option value="">Jain-Digambar</option>
+										<option value="">Jain-Others</option>
+										<option value="">Muslim-All</option>
+										<option value="">Muslim-Shia</option>
+										<option value="">Muslim-Sunni</option>
+										<option value="">Muslim-Others</option>
+										<option value="">Christian-All</option>
+										<option value="">Christian-Catholic</option>
+										<option value="">Jewish</option>
+										<option value="">Inter-Religion</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Mother Tongue : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">English</option>
+										<option value="">French</option>
+										<option value="">Telugu</option>
+										<option value="">Bengali</option>
+										<option value="">Bihari</option>
+										<option value="">Hindi</option>
+										<option value="">Koshali</option>
+										<option value="">Khasi</option>
+										<option value="">Tamil</option>
+										<option value="">Urdu</option>
+										<option value="">Manipuri</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							   <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Physical status : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="radio" name="physique" value="null" checked=""> Doesn't matter &nbsp;&nbsp;
+									<input type="radio" name="physique" value="normal"> Normal &nbsp;&nbsp;
+									<input type="radio" name="physique" value="Physically Challenged"> Physically Challenged
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+							<div class="agileits_advanced_Search">
+							  <h5>Education and Career</h5>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Highest Education : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Any</option>
+										<option value="">Any Bachelors in Engineering / Computers</option>
+										<option value="">Any Masters in Engineering / Computers</option>
+										<option value="">Any Bachelors in Arts / Science / Commerce</option>
+										<option value="">Any Masters in Arts / Science / Commerce</option>
+										<option value="">Any Bachelors in Management</option>
+										<option value="">Any Masters in Management</option>
+										<option value="">Any Bachelors in Medicine in General / Dental / Surgeon</option>
+										<option value="">Any Masters in Medicine in General / Dental / Surgeon</option>
+										<option value="">Any Bachelors in Legal</option>
+										<option value="">Any Masters in Legal</option>
+										<option value="">Ph.D.</option>
+										<option value="">Any Diploma</option>
+										<option value="">Higher Secondary / Secondary</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+								</div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Occupation : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Occupation1</option>
+										<option value="">Occupation2</option>
+										<option value="">Occupation3</option>
+										<option value="">Occupation4</option>
+										<option value="">Occupation5</option>
+										<option value="">Occupation6</option>
+										<option value="">Occupation7</option>
+										<option value="">Occupation8</option>
+										<option value="">Occupation9</option>
+										<option value="">Occupation10</option>
+										<option value="">Occupation11</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Annual income : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">income1</option>
+										<option value="">income2</option>
+										<option value="">income3</option>
+										<option value="">income4</option>
+										<option value="">income5</option>
+										<option value="">income6</option>
+										<option value="">income7</option>
+										<option value="">income8</option>
+										<option value="">income9</option>
+										<option value="">income10</option>
+										<option value="">income11</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  </div>
+							  <div class="agileits_advanced_Search">
+							  <h5>Location details</h5>
+
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Country : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Country1</option>
+										<option value="">Country2</option>
+										<option value="">Country3</option>
+										<option value="">Country4</option>
+										<option value="">Country5</option>
+										<option value="">Country6</option>
+										<option value="">Country7</option>
+										<option value="">Country8</option>
+										<option value="">Country9</option>
+										<option value="">Country10</option>
+										<option value="">Country11</option>
+										<option value="">Country12</option>
+										<option value="">Country13</option>
+										<option value="">Country14</option>
+										<option value="">Country15</option>
+										<option value="">Country16</option>
+										<option value="">Country17</option>
+										<option value="">Country18</option>
+										<option value="">Country19</option>
+										<option value="">Country20</option>
+										<option value="">Country21</option>
+										<option value="">Country22</option>
+										<option value="">Country23</option>
+										<option value="">Country24</option>
+										<option value="">Country25</option>
+										<option value="">Country26</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">State : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">State1</option>
+										<option value="">State2</option>
+										<option value="">State3</option>
+										<option value="">State4</option>
+										<option value="">State5</option>
+										<option value="">State6</option>
+										<option value="">State7</option>
+										<option value="">State8</option>
+										<option value="">State9</option>
+										<option value="">State10</option>
+										<option value="">State11</option>
+										<option value="">State12</option>
+										<option value="">State13</option>
+										<option value="">State14</option>
+										<option value="">State15</option>
+										<option value="">State16</option>
+										<option value="">State17</option>
+										<option value="">State18</option>
+										<option value="">State19</option>
+										<option value="">State20</option>
+										<option value="">State21</option>
+										<option value="">State22</option>
+										<option value="">State23</option>
+										<option value="">State24</option>
+										<option value="">State25</option>
+										<option value="">State26</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  </div>
+							  <div class="agileits_advanced_Search">
+							  <h5>Horoscope details</h5>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Star : </label>
+								<div class="col-sm-7 form_radios">
+								  <div class="select-block1">
+									<select>
+										<option value="">Doesn't matter</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+										<option value="">Star</option>
+									</select>
+								  </div>
+								</div>
+								<div class="clearfix"> </div>
+								</div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Manglik : </label>
+								<div class="col-sm-7 form_radios">
+								    <input type="radio" name="Manglik" value="null" checked=""> Doesn't matter &nbsp;&nbsp;
+									<input type="radio" name="Manglik" value="no"> No &nbsp;&nbsp;
+									<input type="radio" name="Manglik" value="yes"> Yes
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  </div>
+							  <div class="agileits_advanced_Search">
+							  <h5>Habbits</h5>
+							  <div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Eating : </label>
+								<div class="col-sm-7 form_radios">
+								  <input type="radio" name="Eating" value="All" checked=""> All &nbsp;&nbsp;
+									<input type="radio" name="Eating" value="Vegetarian"> Vegetarian &nbsp;&nbsp;
+									<input type="radio" name="Eating" value="Non Veg."> Non Veg.
+								</div>
+								<div class="clearfix"> </div>
+								</div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Drinking : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="radio" name="Drinking" value="no" checked=""> Non drinker &nbsp;&nbsp;
+									<input type="radio" name="Drinking" value="Light drinker"> Light drinker &nbsp;&nbsp;
+									<input type="radio" name="Drinking" value="Regular drinker"> Regular drinker
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+								<div class="form_but1">
+								<label class="col-sm-5 control-label1" for="sex">Smoking : </label>
+								<div class="col-sm-7 form_radios">
+									<input type="radio" name="Smoking" value="no" checked=""> Non Smoker &nbsp;&nbsp;
+									<input type="radio" name="Smoking" value="Light Smoker"> Light Smoker &nbsp;&nbsp;
+									<input type="radio" name="Smoking" value="Regular Smoker"> Regular Smoker
+								</div>
+								<div class="clearfix"> </div>
+							  </div>
+							  </div>
+							  <input type="submit" value="Search">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<div class="clearfix"></div>
+	</div>
+	</div>
+	<script src="js/easyResponsiveTabs.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			$('#parentHorizontalTab').easyResponsiveTabs({
+				type: 'default', //Types: default, vertical, accordion
+				width: 'auto', //auto or any width like 600px
+				fit: true, // 100% fit in a container
+				closed: 'accordion', // Start closed if in accordion view
+				tabidentify: 'hor_1', // The tab groups identifier
+				activate: function (event) { // Callback function if tab is switched
+					var $tab = $(this);
+					var $info = $('#nested-tabInfo');
+					var $name = $('span', $info);
+
+					$name.text($tab.text());
+
+					$info.show();
+				}
+			});
+
+		});
+	</script>
+	<!-- //Search form -->
+
+	<!-- browse profiles -->
+  <div class="w3layouts_featured-profiles">
+    <div class="container">
+    <!-- slider -->
+    <div class="agile_featured-profiles">
+      <h2>Search Results</h2>
+          <ul id="flexiselDemo3">
+              <!-- <div class="col-md-3 biseller-column">
+                <a href="groom_profile.html">
+                  <div class="profile-image">
+                    <img src="images/p1.jpg" class="img-responsive" alt="profile image">
+                    <div class="agile-overlay">
+                    <h4>Profile ID: 458645</h4>
+                    </div >
+                  </div>
+                </a>
+              </div> -->
+          </ul>
+      </div>
+  </div>
+  <!-- //slider -->
+  </div>
+	<!-- //browse profiles -->
+
+
+
+<!-- footer -->
+<footer>
+	<div class="footer">
+		<div class="container">
+
+		</div>
+	</div>
+	<div class="copy-right">
+		<div class="container">
+
+		</div>
+	</div>
+</footer>
+<!-- //footer -->
+<!-- menu js aim -->
+	<script src="js/jquery.menu-aim.js"> </script>
+	<script src="js/main.js"></script> <!-- Resource jQuery -->
+	<!-- //menu js aim -->
+	<!-- for bootstrap working -->
+		<script src="js/bootstrap.js"></script>
+<!-- //for bootstrap working -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			var defaults = {
+	  			containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear'
+	 		};
+			*/
+
+			$().UItoTop({ easingType: 'easeOutQuart' });
+
+		});
+	</script>
+	<a href="#" id="toTop" style="display: none;"><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span><span id="toTopHover"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+	<!-- for smooth scrolling -->
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+	</script>
+	<!-- //for smooth scrolling -->
+
+<!-- //body -->
+
+<!-- //html -->
+<a href="#" id="toTop">To Top</a><a href="#" id="toTop">To Top</a><a href="#" id="toTop">To Top</a><a href="#" id="toTop">To Top</a><a href="#" id="toTop">To Top</a></body></html>
